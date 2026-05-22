@@ -1,21 +1,60 @@
-interface Teacher {
-  [index: string]: any;
-  firstName: string;
-  lastName: string;
-  fullTimeEmployee: boolean;
-  yearsOfExperience?: number;
-  location: string;
+interface DirectorInterface {
+    workFromHome(): string;
+    getCoffeeBreak(): string;
+    workDirectorTasks(): string;
+}
+interface TeacherInterface {
+    workFromHome(): string;
+    getCoffeeBreak(): string;
+    workTeacherTasks(): string;
 }
 
-interface Directors extends Teacher {
-  numberOfReports: number;
+class Director implements DirectorInterface {
+
+    workFromHome(): string {
+        return 'Working from home';
+    }
+    getCoffeeBreak(): string {
+        return 'Getting a coffee break';
+    }
+    workDirectorTasks(): string {
+        return 'Getting to director tasks';
+    }
+}
+class Teacher implements TeacherInterface {
+
+    workFromHome(): string {
+        return 'Cannot work from home';
+    }
+    getCoffeeBreak(): string {
+        return 'Cannot have a break';
+    }
+    workTeacherTasks(): string {
+        return 'Getting to work';
+    }
 }
 
-const director1: Directors = {
-  firstName: 'John',
-  lastName: 'Doe',
-  location: 'London',
-  fullTimeEmployee: true,
-  numberOfReports: 17,
-};
-console.log(director1);
+function createEmployee(salary: number | string): Teacher | Director {
+    if (typeof salary === 'string' ? Number(salary) : salary < 500) return new Teacher();
+    return new Director();
+}
+
+function isDirector(employee: any): boolean {
+    return 'workDirectorTasks' in employee;
+}
+function executeWork(employee: any) {
+    const msg: string = isDirector(employee) ? employee.workDirectorTasks() : employee.workTeacherTasks();
+    console.log(msg);
+}
+
+executeWork(createEmployee(200));
+executeWork(createEmployee(1000));
+
+type Subjects = 'Math' | 'History';
+
+function teachClass(todayClass: Subjects): string {
+    return todayClass === 'Math' ? 'Teaching Math' : 'Teaching History';
+}
+
+console.log(teachClass('Math'));
+console.log(teachClass('History'));
